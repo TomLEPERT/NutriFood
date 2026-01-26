@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Résultats</title>
+</head>
+<body>
+  <h1>Résultats pour "{{ query }}"</h1>
+
+  <p><a href="{% url 'search:index' %}">← Nouvelle recherche</a></p>
+
+  {% if not query %}
+    <p>Entre un terme de recherche.</p>
+  {% elif produits %}
+    <h2>Produits trouvés</h2>
+    <ul>
+      {% for p in produits %}
+        <li>
+          <a href="{% url 'search:produit_detail' p.id %}">{{ p.nom }}</a>
+          — Nutriscore: <strong>{{ p.nutriscore }}</strong>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% if produit_reference %}
+      <hr>
+      <h2>Produit de référence</h2>
+      <p><strong>{{ produit_reference.nom }}</strong> ({{ produit_reference.nutriscore }})</p>
+    {% endif %}
+
+    {% if meilleur_substitut %}
+      <h2>Meilleur substitut proposé</h2>
+      <p>
+        <a href="{% url 'search:produit_detail' meilleur_substitut.id %}">{{ meilleur_substitut.nom }}</a>
+        — Nutriscore: <strong>{{ meilleur_substitut.nutriscore }}</strong>
+      </p>
+      <p><small>Suggestion basée sur un nutriscore meilleur et une catégorie proche.</small></p>
+    {% else %}
+      <h2>Meilleur substitut proposé</h2>
+      <p>Aucun substitut trouvé avec un nutriscore meilleur (dans une catégorie proche).</p>
+    {% endif %}
+
+  {% else %}
+    <p>Aucun produit trouvé.</p>
+  {% endif %}
+</body>
+</html>

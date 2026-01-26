@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Recherche produit</title>
+</head>
+<body>
+  <h1>Rechercher un produit</h1>
+
+  <form action="{% url 'search:resultats' %}" method="get">
+    <input type="text" name="q" placeholder="Ex: eau, biscuits, fromage..." required>
+    <button type="submit">Rechercher</button>
+  </form>
+</body>
+</html>
