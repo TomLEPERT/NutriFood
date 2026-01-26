@@ -1,47 +1,80 @@
-<!doctype html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <title>Résultats</title>
-</head>
-<body>
-  <h1>Résultats pour "{{ query }}"</h1>
+{% extends "search/base.html" %}
 
-  <p><a href="{% url 'search:index' %}">← Nouvelle recherche</a></p>
+{% block title %}Résultats — NutriFood{% endblock %}
 
-  {% if not query %}
+{% block content %}
+<div class="topbar">
+  <div>
+    <h1 class="h2">Résultats</h1>
+    <p class="muted">Recherche : <strong>{{ query }}</strong></p>
+  </div>
+  <a class="btn btn-ghost" href="{% url 'search:index' %}">Nouvelle recherche</a>
+</div>
+
+{% if not query %}
+  <div class="card">
     <p>Entre un terme de recherche.</p>
-  {% elif produits %}
-    <h2>Produits trouvés</h2>
-    <ul>
-      {% for p in produits %}
-        <li>
-          <a href="{% url 'search:produit_detail' p.id %}">{{ p.nom }}</a>
-          — Nutriscore: <strong>{{ p.nutriscore }}</strong>
-        </li>
-      {% endfor %}
-    </ul>
+  </div>
 
-    {% if produit_reference %}
-      <hr>
-      <h2>Produit de référence</h2>
-      <p><strong>{{ produit_reference.nom }}</strong> ({{ produit_reference.nutriscore }})</p>
-    {% endif %}
+{% elif produits %}
+  <div class="grid">
+    <section class="card">
+      <h2 class="h3">Produits trouvés</h2>
+      <p class="muted">Clique sur un produit pour voir sa fiche.</p>
 
-    {% if meilleur_substitut %}
-      <h2>Meilleur substitut proposé</h2>
-      <p>
-        <a href="{% url 'search:produit_detail' meilleur_substitut.id %}">{{ meilleur_substitut.nom }}</a>
-        — Nutriscore: <strong>{{ meilleur_substitut.nutriscore }}</strong>
-      </p>
-      <p><small>Suggestion basée sur un nutriscore meilleur et une catégorie proche.</small></p>
-    {% else %}
-      <h2>Meilleur substitut proposé</h2>
-      <p>Aucun substitut trouvé avec un nutriscore meilleur (dans une catégorie proche).</p>
-    {% endif %}
+      <ul class="list">
+        {% for p in produits %}
+          <li class="list-item">
+            <a class="list-link" href="{% url 'search:produit_detail' p.id %}">
+              <span class="name">{{ p.nom }}</span>
+              <span class="badge ns ns-{{ p.nutriscore|lower }}">{{ p.nutriscore }}</span>
+            </a>
+            <div class="meta muted">{{ p.categorie|default:"Catégorie non renseignée" }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
 
-  {% else %}
-    <p>Aucun produit trouvé.</p>
-  {% endif %}
-</body>
-</html>
+    <aside class="card">
+      <h2 class="h3">Suggestion NutriFood</h2>
+
+      {% if produit_reference %}
+        <div class="mini">
+          <div class="muted">Produit de référence</div>
+          <div class="mini-row">
+            <strong>{{ produit_reference.nom }}</strong>
+            <span class="badge ns ns-{{ produit_reference.nutriscore|lower }}">{{ produit_reference.nutriscore }}</span>
+          </div>
+        </div>
+      {% endif %}
+
+      <hr class="sep">
+
+      {% if meilleur_substitut %}
+        <div class="mini">
+          <div class="muted">Meilleure alternative</div>
+
+          <a class="card-link" href="{% url 'search:produit_detail' meilleur_substitut.id %}">
+            <div class="mini-row">
+              <strong>{{ meilleur_substitut.nom }}</strong>
+              <span class="badge ns ns-{{ meilleur_substitut.nutriscore|lower }}">{{ meilleur_substitut.nutriscore }}</span>
+            </div>
+            <div class="muted small">
+              {{ meilleur_substitut.categorie|default:"Catégorie non renseignée" }}
+            </div>
+          </a>
+
+          <p class="hint">Basé sur un Nutri-Score meilleur et une catégorie proche.</p>
+        </div>
+      {% else %}
+        <p>Pas d’alternative trouvée avec un Nutri-Score meilleur.</p>
+      {% endif %}
+    </aside>
+  </div>
+
+{% else %}
+  <div class="card">
+    <p>Aucun produit trouvé pour “{{ query }}”.</p>
+  </div>
+{% endif %}
+{% endblock %}
