@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>{{ produit.nom }}</title>
+</head>
+<body>
+  <h1>{{ produit.nom }}</h1>
+
+  <ul>
+    <li><strong>Nutriscore :</strong> {{ produit.nutriscore }}</li>
+    <li><strong>Catégorie :</strong> {{ produit.categorie }}</li>
+  </ul>
+
+  <h2>Ingrédients</h2>
+  <p>{{ produit.ingredient|default:"(non renseigné)" }}</p>
+</body>
+</html>
