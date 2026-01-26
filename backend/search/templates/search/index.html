@@ -1,0 +1,32 @@
+{% extends "search/base.html" %}
+
+{% block title %}Recherche — NutriFood{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-card">
+    <h1>Trouve une alternative plus saine</h1>
+    <p class="muted">
+      Recherche un produit et NutriFood te propose un substitut de meilleure qualité (Nutri-Score).
+    </p>
+
+    <form class="search-form" action="{% url 'search:resultats' %}" method="get">
+      <input
+        class="search-input"
+        type="text"
+        name="q"
+        placeholder="Ex: eau, biscuits, fromage…"
+        required
+      />
+      <button class="btn" type="submit">Rechercher</button>
+    </form>
+
+    <div class="chips">
+      <a class="chip" href="{% url 'search:resultats' %}?q=eau">eau</a>
+      <a class="chip" href="{% url 'search:resultats' %}?q=biscuits">biscuits</a>
+      <a class="chip" href="{% url 'search:resultats' %}?q=fromage">fromage</a>
+      <a class="chip" href="{% url 'search:resultats' %}?q=yaourt">yaourt</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

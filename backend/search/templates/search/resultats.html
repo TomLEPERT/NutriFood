@@ -1,0 +1,80 @@
+{% extends "search/base.html" %}
+
+{% block title %}Résultats — NutriFood{% endblock %}
+
+{% block content %}
+<div class="topbar">
+  <div>
+    <h1 class="h2">Résultats</h1>
+    <p class="muted">Recherche : <strong>{{ query }}</strong></p>
+  </div>
+  <a class="btn btn-ghost" href="{% url 'search:index' %}">Nouvelle recherche</a>
+</div>
+
+{% if not query %}
+  <div class="card">
+    <p>Entre un terme de recherche.</p>
+  </div>
+
+{% elif produits %}
+  <div class="grid">
+    <section class="card">
+      <h2 class="h3">Produits trouvés</h2>
+      <p class="muted">Clique sur un produit pour voir sa fiche.</p>
+
+      <ul class="list">
+        {% for p in produits %}
+          <li class="list-item">
+            <a class="list-link" href="{% url 'search:produit_detail' p.id %}">
+              <span class="name">{{ p.nom }}</span>
+              <span class="badge ns ns-{{ p.nutriscore|lower }}">{{ p.nutriscore }}</span>
+            </a>
+            <div class="meta muted">{{ p.categorie|default:"Catégorie non renseignée" }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <aside class="card">
+      <h2 class="h3">Suggestion NutriFood</h2>
+
+      {% if produit_reference %}
+        <div class="mini">
+          <div class="muted">Produit de référence</div>
+          <div class="mini-row">
+            <strong>{{ produit_reference.nom }}</strong>
+            <span class="badge ns ns-{{ produit_reference.nutriscore|lower }}">{{ produit_reference.nutriscore }}</span>
+          </div>
+        </div>
+      {% endif %}
+
+      <hr class="sep">
+
+      {% if meilleur_substitut %}
+        <div class="mini">
+          <div class="muted">Meilleure alternative</div>
+
+          <a class="card-link" href="{% url 'search:produit_detail' meilleur_substitut.id %}">
+            <div class="mini-row">
+              <strong>{{ meilleur_substitut.nom }}</strong>
+              <span class="badge ns ns-{{ meilleur_substitut.nutriscore|lower }}">{{ meilleur_substitut.nutriscore }}</span>
+            </div>
+            <div class="muted small">
+              {{ meilleur_substitut.categorie|default:"Catégorie non renseignée" }}
+            </div>
+          </a>
+
+          <p class="hint">Basé sur un Nutri-Score meilleur et une catégorie proche.</p>
+        </div>
+      {% else %}
+        <p>Pas d’alternative trouvée avec un Nutri-Score meilleur.</p>
+      {% endif %}
+    </aside>
+  </div>
+
+{% else %}
+  <div class="card">
+    <p>Aucun produit trouvé pour “{{ query }}”.</p>
+  </div>
+{% endif %}
+{% endblock %}

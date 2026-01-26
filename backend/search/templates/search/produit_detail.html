@@ -1,0 +1,32 @@
+{% extends "search/base.html" %}
+
+{% block title %}{{ produit.nom }} — NutriFood{% endblock %}
+
+{% block content %}
+<div class="topbar">
+  <div>
+    <h1 class="h2">{{ produit.nom }}</h1>
+    <p class="muted">{{ produit.categorie|default:"Catégorie non renseignée" }}</p>
+  </div>
+  <a class="btn btn-ghost" href="{% url 'search:index' %}">Retour</a>
+</div>
+
+<section class="card">
+  <div class="detail-grid">
+    <div>
+      <div class="label">Nutri-Score</div>
+      <div class="badge big ns ns-{{ produit.nutriscore|lower }}">{{ produit.nutriscore }}</div>
+    </div>
+
+    <div>
+      <div class="label">Catégories</div>
+      <div class="muted">{{ produit.categorie|default:"—" }}</div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="h3">Ingrédients</h2>
+  <p class="muted">{{ produit.ingredient|default:"(non renseigné)" }}</p>
+</section>
+{% endblock %}
